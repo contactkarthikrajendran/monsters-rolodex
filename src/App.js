@@ -9,9 +9,26 @@ class App extends Component{
     super();
 
     this.state = {
-      name: { firstName: 'karthik',
-             lastName: 'Rajendran'},
-     company: 'SCB'
+
+      monsters:[
+        {
+          id: '1',
+          name:'Linda'
+        },
+        {
+          id: '2',
+          name:'Meenu'
+        },
+        {
+          id: '3',
+          name:'Karthik'
+        },
+        {
+          id: '4',
+          name:'test'
+        }
+      ]
+      
     };
   }
 
@@ -19,14 +36,11 @@ class App extends Component{
   render(){
     return (
            <div className="App">
-             <header className="App-header">
-               <img src={logo} className="App-logo" alt="logo" />
-               <p>I am {this.state.name.firstName} {this.state.name.lastName}</p>
-               <button onClick={()=>{
-                  this.setState({ name:{ firstName: 'Meenu' , lastName: 'Iyer' }});
-               }}> test</button>
-               
-             </header>
+            {this.state.monsters.map((a)=>{
+             return <div id ={a.id}>              
+              <h1>{a.name}</h1>             
+             </div>            
+            })}
            </div>
          );
   }
