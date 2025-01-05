@@ -5,19 +5,31 @@ import './App.css';
 
 class App extends Component{
 
+ 
+ 
+
   constructor(){
     super();
-
     this.state = {
-      monsters:[],    
+      monsters:[],  
+      searchText:'',  
     };
+
+    this.isMatch = (value) => {  
+      if(this.state.searchText === '') return true;
+      else return value.name.toLowerCase().includes(this.state.searchText);    
+    };
+    
+    console.log('constructor');
   }
+  
 
   componentDidMount(){
+    console.log('componentDidMount');
     fetch('https://jsonplaceholder.typicode.com/users')
     .then((response)=> response.json())
     .then((users)=> this.setState(
-        ()=>{
+        ()=>{          
          return {monsters: users}
         },
         ()=>{
@@ -28,14 +40,26 @@ class App extends Component{
 
 
   render(){
+    console.log('render');
     return (
-           <div className="App">
-            {this.state.monsters.map((monster)=>{
-             return (
+           <div className="App">    
+           <input className ='SearchBox' type='search' placeholder='Search Monsters' onChange={(event)=>{
+            this.setState(
+              ()=>{
+                return {searchText:event.target.value}
+              },
+              ()=>{
+                console.log('searchText : '+this.state.searchText);
+              }
+            )
+           }}/>
+            {this.state.monsters.filter((monster)=>this.isMatch(monster)).map((monster)=>{              
+             return (             
               <div key ={monster.id}>              
                 <h1>{monster.name}</h1>             
              </div> );          
-            })}
+            })    
+          }
            </div>
 
          );
