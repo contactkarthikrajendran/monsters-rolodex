@@ -1,68 +1,73 @@
-import { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Component } from "react";
+import CardList from "./components/card-list/card-list.component";
+import SearchBox from "./components/search-box/search-box.component";
+import logo from "./logo.svg";
+import "./App.css";
 
-
-class App extends Component{
-
- 
- 
-
-  constructor(){
+class App extends Component {
+  constructor() {
     super();
     this.state = {
-      monsters:[],  
-      searchText:'',  
+      monsters: [],
+      searchText: "",
     };
 
-    this.isMatch = (value) => {  
-      if(this.state.searchText === '') return true;
-      else return value.name.toLowerCase().includes(this.state.searchText);    
+    this.isMatch = (value) => {
+      if (this.state.searchText === "") return true;
+      else return value.name.toLowerCase().includes(this.state.searchText);
     };
-    
-    console.log('constructor');
-  }
-  
 
-  componentDidMount(){
-    console.log('componentDidMount');
-    fetch('https://jsonplaceholder.typicode.com/users')
-    .then((response)=> response.json())
-    .then((users)=> this.setState(
-        ()=>{          
-         return {monsters: users}
-        },
-        ()=>{
-          console.log(this.state.monsters);
-        }
-      ));
+    //console.log("constructor");
   }
 
-
-  render(){
-    console.log('render');
-    return (
-           <div className="App">    
-           <input className ='SearchBox' type='search' placeholder='Search Monsters' onChange={(event)=>{
-            this.setState(
-              ()=>{
-                return {searchText:event.target.value}
-              },
-              ()=>{
-                console.log('searchText : '+this.state.searchText);
-              }
-            )
-           }}/>
-            {this.state.monsters.filter((monster)=>this.isMatch(monster)).map((monster)=>{              
-             return (             
-              <div key ={monster.id}>              
-                <h1>{monster.name}</h1>             
-             </div> );          
-            })    
+  componentDidMount() {
+    console.log("componentDidMount");
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) =>
+        this.setState(
+          () => {
+            return { monsters: users };
           }
-           </div>
+          //,
+          // () => {
+          //   console.log(this.state.monsters);
+          // }
+        )
+      );
+  }
 
-         );
+  onSearchChange = (event) => {
+    const searchText = event.target.value;
+    this.setState(
+      () => {
+        return { searchText };
+      }
+      //,
+      // () => {
+      //   console.log("searchText : " + this.state.searchText);
+      // }
+    );
+  };
+
+  render() {
+    console.log("render");
+
+    const { monsters, searchText } = this.state;
+    const { onSearchChange } = this;
+
+    const filteredMap = monsters.filter((monster) => this.isMatch(monster));
+
+    return (
+      <div className="App">
+        <SearchBox
+          className="monster-SearchBox"
+          placeholder="Search Monsters"
+          onChangeHandler={onSearchChange}
+        />
+        <CardList monsters={filteredMap}></CardList>
+      </div>
+    );
   }
 }
 // function App() {
